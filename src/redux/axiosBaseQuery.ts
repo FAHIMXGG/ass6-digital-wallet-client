@@ -17,6 +17,7 @@ const axiosBaseQuery =
   > =>
   async ({ url, method, data, params, headers }) => {
     try {
+      console.log('AxiosBaseQuery - Request:', { url, method, data, params, headers });
       const result = await axiosInstance({
         url: url,
         method,
@@ -24,9 +25,11 @@ const axiosBaseQuery =
         params,
         headers,
       });
+      //console.log('AxiosBaseQuery - Response:', result.data);
       return { data: result.data };
     } catch (axiosError) {
       const err = axiosError as AxiosError;
+      //console.error('AxiosBaseQuery - Error:', err.response?.data);
       return {
         error: {
           status: err.response?.status,

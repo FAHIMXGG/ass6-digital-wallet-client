@@ -1,4 +1,6 @@
-import UserOverview from "@/pages/user/UserOverview";
+import MyWallet from "@/pages/MyWallet";
+import SendMoney from "@/pages/user/SendMoney";
+import Withdraw from "@/pages/user/Withdraw";
 
 export const userSidebarItems = [
   {
@@ -7,7 +9,7 @@ export const userSidebarItems = [
       {
         title: "Overview",
         url: "/user/overview",
-        component: UserOverview,
+        component: MyWallet,
       },
     ],
   },
@@ -15,14 +17,19 @@ export const userSidebarItems = [
     title: "Management",
     items: [
       {
-        title: "Overview",
-        url: "/user/overview",
-        component: UserOverview,
+        title: "My Wallet",
+        url: "/user/wallet",
+        component: MyWallet,
       },
       {
-        title: "User Overview",
-        url: "/user/overview",
-        component: UserOverview,
+        title: "Send Money",
+        url: "/user/send-money",
+        component: SendMoney,
+      },
+      {
+        title: "Withdraw",
+        url: "/user/withdraw",
+        component: Withdraw,
       },
       
     ],

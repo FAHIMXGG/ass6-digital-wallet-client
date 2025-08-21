@@ -1,10 +1,10 @@
 import App from "@/App";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import AgentOverview from "@/pages/agent/AgentOverview";
 import Contact from "@/pages/Contact";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Verify from "@/pages/Verify";
+import MyWallet from "@/pages/MyWallet";
 import { createBrowserRouter } from "react-router";
 import { userSidebarItems } from "./userSidebarItems";
 import { adminSidebarItems } from "./adminSidebarItems";
@@ -15,7 +15,6 @@ import { withAuth } from "@/utils/withAuth";
 import { role } from "@/constants/role";
 import type { TRole } from "@/types";
 import { agentSidebarItems } from "./agentSidebarItems";
-import { getSidebarItems } from "@/utils/getSidebarItems";
 
 export const router = createBrowserRouter([
   {
@@ -26,7 +25,7 @@ export const router = createBrowserRouter([
         Component: Contact,
         path: "contact",
       },
-    
+      
     ],
   },
   {

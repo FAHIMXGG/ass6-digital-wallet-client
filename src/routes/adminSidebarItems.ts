@@ -1,4 +1,6 @@
+import AllWallets from "@/pages/admin/AllWallets";
 import Overview from "@/pages/admin/Overview";
+import MyWallet from "@/pages/MyWallet";
 import type { ISidebarItem } from "@/types";
 
 export const adminSidebarItems: ISidebarItem[] = [
@@ -8,7 +10,7 @@ export const adminSidebarItems: ISidebarItem[] = [
       {
         title: "Overview",
         url: "/admin/overview",
-        component: Overview,
+        component: MyWallet,
       },
     ],
   },
@@ -21,10 +23,11 @@ export const adminSidebarItems: ISidebarItem[] = [
         component: Overview,
       },
       {
-        title: "ggg",
-        url: "/admin/overview",
-        component: Overview,
+        title: "All Wallets",
+        url: "/admin/all-wallets",
+        component: AllWallets,
       },
+      
     ],
   }
 ];

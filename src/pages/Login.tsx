@@ -68,6 +68,7 @@ const Login = () => {
                 setIsLoading(false);
                 console.log('Login successful!');
                 // Handle success (redirect, show message, etc.)
+                navigate("/");
             }, 2000);
         } catch (err) {
             setIsLoading(false);
