@@ -1,34 +1,72 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Shield } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { Button } from '../components/ui/button';
-import { cn } from '@/lib/utils';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '../components/ui/form';
+
+// Define the form schema to match backend structure
+const loginSchema = z.object({
+    email: z.string()
+        .email('Please enter a valid email address'),
+    password: z.string()
+        .min(1, 'Password is required'),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-        rememberMe: false
+
+    const form = useForm<LoginFormData>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            email: '',
+            password: '',
+        },
     });
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const onSubmit = async (data: LoginFormData) => {
         setIsLoading(true);
         
-        // Simulate API call
-        setTimeout(() => {
+        // Prepare data for backend
+        const backendData = {
+            email: data.email,
+            password: data.password,
+        };
+
+        try {
+            // Simulate API call
+            console.log('Sending to backend:', backendData);
+            
+            // Here you would make your actual API call
+            // const response = await fetch('/api/login', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(backendData),
+            // });
+            
+            setTimeout(() => {
+                setIsLoading(false);
+                console.log('Login successful!');
+                // Handle success (redirect, show message, etc.)
+            }, 2000);
+        } catch (error) {
             setIsLoading(false);
-            console.log('Login attempt:', formData);
-        }, 2000);
+            console.error('Login failed:', error);
+            // Handle error
+        }
     };
 
     return (
@@ -47,93 +85,102 @@ const Login = () => {
 
                 {/* Login Form */}
                 <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Email Field */}
-                        <div className="space-y-2">
-                            <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                                Email address
-                            </label>
-                            <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                    required
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                                    placeholder="Enter your email"
-                                />
-                            </div>
-                        </div>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            {/* Email Field */}
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-sm font-medium text-gray-700">
+                                            Email address
+                                        </FormLabel>
+                                        <div className="relative">
+                                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                            <FormControl>
+                                                <input
+                                                    {...field}
+                                                    type="email"
+                                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                                    placeholder="Enter your email"
+                                                />
+                                            </FormControl>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
-                        {/* Password Field */}
-                        <div className="space-y-2">
-                            <label htmlFor="password" className="text-sm font-medium text-gray-700">
-                                Password
-                            </label>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    id="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleInputChange}
-                                    required
-                                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                                    placeholder="Enter your password"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                            {/* Password Field */}
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-sm font-medium text-gray-700">
+                                            Password
+                                        </FormLabel>
+                                        <div className="relative">
+                                            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                            <FormControl>
+                                                <input
+                                                    {...field}
+                                                    type={showPassword ? 'text' : 'password'}
+                                                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                                    placeholder="Enter your password"
+                                                />
+                                            </FormControl>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                                            >
+                                                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                            </button>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {/* Remember Me & Forgot Password */}
+                            <div className="flex items-center justify-between">
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                    />
+                                    <span className="text-sm text-gray-700">Remember me</span>
+                                </label>
+                                <a
+                                    href="/forgot-password"
+                                    className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
                                 >
-                                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                                </button>
+                                    Forgot password?
+                                </a>
                             </div>
-                        </div>
 
-                        {/* Remember Me & Forgot Password */}
-                        <div className="flex items-center justify-between">
-                            <label className="flex items-center space-x-2">
-                                <input
-                                    type="checkbox"
-                                    name="rememberMe"
-                                    checked={formData.rememberMe}
-                                    onChange={handleInputChange}
-                                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                />
-                                <span className="text-sm text-gray-700">Remember me</span>
-                            </label>
-                            <a
-                                href="/forgot-password"
-                                className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                            {/* Submit Button */}
+                            <Button
+                                type="submit"
+                                disabled={isLoading}
+                                className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Forgot password?
-                            </a>
-                        </div>
-
-                        {/* Submit Button */}
-                        <Button
-                            type="submit"
-                            disabled={isLoading}
-                            className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {isLoading ? (
-                                <div className="flex items-center space-x-2">
-                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                    <span>Signing in...</span>
-                                </div>
-                            ) : (
-                                <div className="flex items-center justify-center space-x-2">
-                                    <span>Sign in</span>
-                                    <ArrowRight className="w-4 h-4" />
-                                </div>
-                            )}
-                        </Button>
-                    </form>
+                                {isLoading ? (
+                                    <div className="flex items-center space-x-2">
+                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                        <span>Signing in...</span>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-center space-x-2">
+                                        <span>Sign in</span>
+                                        <ArrowRight className="w-4 h-4" />
+                                    </div>
+                                )}
+                            </Button>
+                        </form>
+                    </Form>
 
                     {/* Divider */}
                     <div className="my-6 flex items-center">
