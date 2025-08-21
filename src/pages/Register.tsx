@@ -15,6 +15,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useRegisterMutation } from '@/redux/features/auth/auth.api';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router';
 
 // Define the form schema to match backend structure
 const registerSchema = z.object({
@@ -49,6 +50,7 @@ const Register = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [register] = useRegisterMutation();
+    const navigate = useNavigate();
 
     const form = useForm<RegisterFormData>({
         resolver: zodResolver(registerSchema),
@@ -81,6 +83,7 @@ const Register = () => {
             toast.success('Registration successful!');
             console.log(result);
             console.log('Sending to backend:', backendData);
+            navigate('/verify');
             
             // Here you would make your actual API call
             // const response = await fetch('/api/register', {

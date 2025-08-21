@@ -12,6 +12,9 @@ import {
     FormLabel,
     FormMessage,
 } from '../components/ui/form';
+import { useLoginMutation } from '@/redux/features/auth/auth.api';
+import { useNavigate } from 'react-router';
+import { toast } from 'sonner';
 
 // Define the form schema to match backend structure
 const loginSchema = z.object({
@@ -26,6 +29,8 @@ type LoginFormData = z.infer<typeof loginSchema>;
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [login] = useLoginMutation();
+    const navigate = useNavigate();
 
     const form = useForm<LoginFormData>({
         resolver: zodResolver(loginSchema),
@@ -46,6 +51,8 @@ const Login = () => {
 
         try {
             // Simulate API call
+            const result = await login(backendData).unwrap();
+            console.log(result);
             console.log('Sending to backend:', backendData);
             
             // Here you would make your actual API call
@@ -62,10 +69,17 @@ const Login = () => {
                 console.log('Login successful!');
                 // Handle success (redirect, show message, etc.)
             }, 2000);
-        } catch (error) {
+        } catch (err) {
             setIsLoading(false);
-            console.error('Login failed:', error);
+            console.error('Login failed:', err);
             // Handle error
+            if ((err as any).status === 403) {
+                toast.error("Your account is not verified");
+                navigate("/verify", { state: data.email });
+            }
+            if ((err as any).status === 401) {
+                toast.error("Invalid credentials");
+            }
         }
     };
 

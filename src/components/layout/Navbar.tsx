@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
-import { Menu, X, Home, User, Mail, Info } from 'lucide-react';
+import { Menu, X, Home, User, Mail, Info, LogOut, LayoutDashboard } from 'lucide-react';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import { ModeToggle } from './mode-toggle';
+import { useUserInfoQuery, useLogoutMutation, authApi } from '@/redux/features/auth/auth.api';
+import { useDispatch } from 'react-redux';
 
 const Navbar = () => {
+    const {data, isLoading} = useUserInfoQuery(undefined);
+    const [logout] = useLogoutMutation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const dispatch = useDispatch();
+
+    const user = data?.data;
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -13,6 +20,17 @@ const Navbar = () => {
 
     const closeMenu = () => {
         setIsMenuOpen(false);
+    };
+
+    const handleLogout = async () => {
+        try {
+            await logout(undefined);
+            dispatch(authApi.util.resetApiState());
+            // Optionally redirect to login page or refresh the page
+            // window.location.href = '/login';
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
     };
 
     const navItems = [
@@ -49,17 +67,45 @@ const Navbar = () => {
                                     <span>{item.name}</span>
                                 </a>
                             ))}
+                            {user && (
+                                <a
+                                    href="/dashboard"
+                                    className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center space-x-1"
+                                >
+                                    <LayoutDashboard className="w-4 h-4" />
+                                    <span>Dashboard</span>
+                                </a>
+                            )}
                         </div>
                     </div>
 
-                    {/* Auth Buttons */}
+                    {/* Auth Buttons / User Info */}
                     <div className="hidden md:block flex items-center space-x-3">
-                        <Button variant="ghost" size="sm" asChild>
-                            <a href="/login">Sign In</a>
-                        </Button>
-                        <Button variant="default" size="sm" asChild>
-                            <a href="/register">Register</a>
-                        </Button>
+                        {user ? (
+                            <>
+                                <div className="flex items-center space-x-2">
+                                    <span className="text-sm text-gray-700">Welcome, {user.name}</span>
+                                    <Button 
+                                        variant="outline" 
+                                        size="sm" 
+                                        onClick={handleLogout}
+                                        className="flex items-center space-x-1"
+                                    >
+                                        <LogOut className="w-4 h-4" />
+                                        <span>Logout</span>
+                                    </Button>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <Button variant="ghost" size="sm" asChild>
+                                    <a href="/login">Sign In</a>
+                                </Button>
+                                <Button variant="default" size="sm" asChild>
+                                    <a href="/register">Register</a>
+                                </Button>
+                            </>
+                        )}
                     </div>
                     <ModeToggle />
 
@@ -100,13 +146,45 @@ const Navbar = () => {
                             <span>{item.name}</span>
                         </a>
                     ))}
+                    {user && (
+                        <a
+                            href="/dashboard"
+                            onClick={closeMenu}
+                            className="text-gray-700 hover:text-blue-600 hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 flex items-center space-x-3"
+                        >
+                            <LayoutDashboard className="w-5 h-5" />
+                            <span>Dashboard</span>
+                        </a>
+                    )}
                     <div className="pt-4 pb-2 space-y-2">
-                        <Button variant="ghost" size="sm" className="w-full" asChild>
-                            <a href="/login">Sign In</a>
-                        </Button>
-                        <Button variant="default" size="sm" className="w-full" asChild>
-                            <a href="/register">Register</a>
-                        </Button>
+                        {user ? (
+                            <>
+                                <div className="px-3 py-2 text-sm text-gray-700">
+                                    Welcome, {user.name}
+                                </div>
+                                <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    className="w-full flex items-center justify-center space-x-2" 
+                                    onClick={() => {
+                                        handleLogout();
+                                        closeMenu();
+                                    }}
+                                >
+                                    <LogOut className="w-4 h-4" />
+                                    <span>Logout</span>
+                                </Button>
+                            </>
+                        ) : (
+                            <>
+                                <Button variant="ghost" size="sm" className="w-full" asChild>
+                                    <a href="/login">Sign In</a>
+                                </Button>
+                                <Button variant="default" size="sm" className="w-full" asChild>
+                                    <a href="/register">Register</a>
+                                </Button>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
