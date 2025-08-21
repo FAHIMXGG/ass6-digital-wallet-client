@@ -42,6 +42,7 @@ const Navbar = () => {
         { id: 'support', name: 'Support', href: '/support', icon: Mail, role: 'public'},
         { id: 'admin-dashboard', name: 'Admin Dashboard', href: '/admin', icon: LayoutDashboard, role: role.admin},
         { id: 'user-dashboard', name: 'User Dashboard', href: '/user', icon: LayoutDashboard, role: role.user},
+        { id: 'agent-dashboard', name: 'Agent Dashboard', href: '/agent', icon: LayoutDashboard, role: role.agent},
     ], []);
 
     // Filter navigation items based on user role

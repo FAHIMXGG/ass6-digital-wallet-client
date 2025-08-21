@@ -9,6 +9,13 @@ import { createBrowserRouter } from "react-router";
 import { userSidebarItems } from "./userSidebarItems";
 import { adminSidebarItems } from "./adminSidebarItems";
 import { generateRoutes } from "@/utils/generateRoutes";
+import { Navigate } from "react-router";
+import Unauthorized from "@/pages/Unauthorized";
+import { withAuth } from "@/utils/withAuth";
+import { role } from "@/constants/role";
+import type { TRole } from "@/types";
+import { agentSidebarItems } from "./agentSidebarItems";
+import { getSidebarItems } from "@/utils/getSidebarItems";
 
 export const router = createBrowserRouter([
   {
@@ -23,26 +30,27 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    Component: DashboardLayout,
+    Component: withAuth(DashboardLayout, role.admin as TRole),
     path: "/admin",
     children: [
+      {index: true, element: <Navigate to="/admin/overview" />},
       ...generateRoutes(adminSidebarItems)
     ],
   },
   {
-    Component: DashboardLayout,
+    Component: withAuth(DashboardLayout, role.agent as TRole),
     path: "/agent",
     children: [
-      {
-        Component: AgentOverview,
-        path: "overview",
-      },
+      {index: true, element: <Navigate to="/agent/overview" />},
+      ...generateRoutes(agentSidebarItems)
     ],
   },
+
   {
-    Component: DashboardLayout,
+    Component: withAuth(DashboardLayout, role.user as TRole),
     path: "/user",
     children: [
+      {index: true, element: <Navigate to="/user/overview" />},
       ...generateRoutes(userSidebarItems)
     ],
   },
@@ -57,5 +65,9 @@ export const router = createBrowserRouter([
   {
     Component: Verify,
     path: "/verify",
+  },
+  {
+    Component: Unauthorized,
+    path: "/unauthorized",
   }
 ]);
