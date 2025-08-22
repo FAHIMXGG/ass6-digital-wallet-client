@@ -4,6 +4,7 @@ import Overview from "@/pages/admin/Overview";
 import MyWallet from "@/pages/MyWallet";
 import type { ISidebarItem } from "@/types";
 import AgentBlockUnblock from "@/pages/admin/AgentBlockUnblock";
+import AllTransaction from "@/pages/admin/AllTransaction";
 
 export const adminSidebarItems: ISidebarItem[] = [
   {
@@ -38,6 +39,11 @@ export const adminSidebarItems: ISidebarItem[] = [
         title: "Agent Block/Unblock",
         url: "/admin/agent-block-unblock",
         component: AgentBlockUnblock,
+      },
+      {
+        title: "All Transaction",
+        url: "/admin/all-transaction",
+        component: AllTransaction,
       },
     ],
   }

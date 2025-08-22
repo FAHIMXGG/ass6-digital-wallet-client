@@ -1,6 +1,7 @@
 import Overview from "@/pages/admin/Overview";
 import CashIn from "@/pages/agent/CashIn";
 import CashOut from "@/pages/agent/CashOut";
+import MyHistory from "@/pages/MyHistory";
 import MyWallet from "@/pages/MyWallet";
 import type { ISidebarItem } from "@/types";
 
@@ -32,6 +33,11 @@ export const agentSidebarItems: ISidebarItem[] = [
         title: "agent overview",
         url: "/agent/overview",
         component: Overview,
+      },
+      {
+        title: "My History",
+        url: "/agent/my-history",
+        component: MyHistory,
       },
     ],
   }
