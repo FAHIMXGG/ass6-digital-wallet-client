@@ -4,7 +4,6 @@ import Contact from "@/pages/Contact";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Verify from "@/pages/Verify";
-import MyWallet from "@/pages/MyWallet";
 import { createBrowserRouter } from "react-router";
 import { userSidebarItems } from "./userSidebarItems";
 import { adminSidebarItems } from "./adminSidebarItems";
