@@ -9,16 +9,13 @@ import {
   Loader2,
   AlertCircle,
   CheckCircle,
-  ArrowLeft,
   Minus,
   CreditCard,
   Banknote,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router';
 
 const Withdraw = () => {
-  const navigate = useNavigate();
   const [amount, setAmount] = useState('');
   const [withdrawalMethod, setWithdrawalMethod] = useState<'bank' | 'card'>('bank');
   
@@ -94,10 +91,10 @@ const Withdraw = () => {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Wallet not found</h3>
-          <p className="text-gray-600 mb-4">Unable to load your wallet information.</p>
-          <Button onClick={() => navigate('/')}>Go Home</Button>
+          <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-foreground mb-2">Wallet not found</h3>
+          <p className="text-muted-foreground mb-4">Unable to load your wallet information.</p>
+          <Button onClick={() => window.location.href = '/'}>Go Home</Button>
         </div>
       </div>
     );
@@ -107,35 +104,26 @@ const Withdraw = () => {
     <div className="container mx-auto px-4 py-8 max-w-2xl">
       {/* Header */}
       <div className="mb-8">
-        <Button
-          variant="ghost"
-          onClick={() => navigate('/')}
-          className="mb-4"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Dashboard
-        </Button>
-        
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Withdraw Money</h1>
-          <p className="text-gray-600">Withdraw funds from your wallet to your bank account or card</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Withdraw Money</h1>
+          <p className="text-muted-foreground">Withdraw funds from your wallet to your bank account or card</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6">
         {/* My Wallet Info */}
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
           <CardHeader>
-            <CardTitle className="flex items-center space-x-2 text-red-700">
+            <CardTitle className="flex items-center space-x-2 text-red-700 dark:text-red-400">
               <DollarSign className="h-5 w-5" />
               <span>Your Wallet</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-sm text-red-800">
+            <div className="text-sm text-red-800 dark:text-red-400">
               <div className="font-medium">{myWallet.userId.name}</div>
               <div className="text-xs">{myWallet.userId.email}</div>
-              <div className="text-2xl font-bold text-red-600 mt-2">
+              <div className="text-2xl font-bold text-red-600 dark:text-red-400 mt-2">
                 Available Balance: {formatCurrency(myWallet.balance)}
               </div>
             </div>
@@ -146,7 +134,7 @@ const Withdraw = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <Minus className="h-5 w-5 text-red-500" />
+              <Minus className="h-5 w-5 text-red-600 dark:text-red-400" />
               <span>Withdraw Funds</span>
             </CardTitle>
             <CardDescription>
@@ -157,7 +145,7 @@ const Withdraw = () => {
             <form onSubmit={handleWithdraw} className="space-y-6">
               {/* Withdrawal Method */}
               <div>
-                <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                <Label className="text-sm font-medium text-foreground mb-3 block">
                   Withdrawal Method
                 </Label>
                 <div className="grid grid-cols-2 gap-3">
@@ -167,8 +155,8 @@ const Withdraw = () => {
                     onClick={() => setWithdrawalMethod('bank')}
                     className={`flex items-center space-x-2 ${
                       withdrawalMethod === 'bank' 
-                        ? 'bg-blue-600 hover:bg-blue-700' 
-                        : 'hover:bg-gray-50'
+                        ? 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700' 
+                        : 'hover:bg-muted/50'
                     }`}
                   >
                     <Banknote className="h-4 w-4" />
@@ -180,8 +168,8 @@ const Withdraw = () => {
                     onClick={() => setWithdrawalMethod('card')}
                     className={`flex items-center space-x-2 ${
                       withdrawalMethod === 'card' 
-                        ? 'bg-blue-600 hover:bg-blue-700' 
-                        : 'hover:bg-gray-50'
+                        ? 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700' 
+                        : 'hover:bg-muted/50'
                     }`}
                   >
                     <CreditCard className="h-4 w-4" />
@@ -204,14 +192,14 @@ const Withdraw = () => {
                   step="0.01"
                   required
                 />
-                <div className="mt-1 text-xs text-gray-500">
+                <div className="mt-1 text-xs text-muted-foreground">
                   Available: {formatCurrency(myWallet.balance)} | Min: $10
                 </div>
               </div>
 
               {/* Quick Amount Buttons */}
               <div>
-                <Label className="text-sm text-gray-600">Quick Amounts</Label>
+                <Label className="text-sm text-muted-foreground">Quick Amounts</Label>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {[25, 50, 100, 250, 500].map((quickAmount) => (
                     <Button
@@ -230,7 +218,7 @@ const Withdraw = () => {
                     variant="outline"
                     size="sm"
                     onClick={handleMaxAmount}
-                    className="text-xs bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
+                    className="text-xs bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30"
                   >
                     Max ({formatCurrency(myWallet.balance)})
                   </Button>
@@ -240,7 +228,7 @@ const Withdraw = () => {
               {/* Withdrawal Button */}
               <Button
                 type="submit"
-                className="w-full bg-red-600 hover:bg-red-700"
+                className="w-full bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700"
                 disabled={isWithdrawLoading || !amount || parseFloat(amount) < 10}
               >
                 {isWithdrawLoading ? (
@@ -263,30 +251,30 @@ const Withdraw = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <CheckCircle className="h-5 w-5 text-green-500" />
+              <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
               <span>Withdrawal Information</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4 text-sm">
               <div>
-                <h4 className="font-medium mb-2">Processing Time</h4>
-                <ul className="list-disc list-inside space-y-1 text-gray-600">
+                <h4 className="font-medium mb-2 text-foreground">Processing Time</h4>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                   <li>Bank Transfer: 1-3 business days</li>
                   <li>Card Withdrawal: 2-5 business days</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-medium mb-2">Fees</h4>
-                <ul className="list-disc list-inside space-y-1 text-gray-600">
+                <h4 className="font-medium mb-2 text-foreground">Fees</h4>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                   <li>Bank Transfer: $2.50 per transaction</li>
                   <li>Card Withdrawal: $3.00 per transaction</li>
                   <li>Minimum withdrawal: $10.00</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-medium mb-2">Requirements</h4>
-                <ul className="list-disc list-inside space-y-1 text-gray-600">
+                <h4 className="font-medium mb-2 text-foreground">Requirements</h4>
+                <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                   <li>Sufficient balance in your wallet</li>
                   <li>Verified account (for security)</li>
                   <li>Valid withdrawal method</li>
@@ -297,15 +285,15 @@ const Withdraw = () => {
         </Card>
 
         {/* Important Notice */}
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
           <CardHeader>
-            <CardTitle className="flex items-center space-x-2 text-red-700">
+            <CardTitle className="flex items-center space-x-2 text-red-700 dark:text-red-400">
               <AlertCircle className="h-5 w-5" />
               <span>Important Notice</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-sm text-red-700">
+            <div className="text-sm text-red-700 dark:text-red-400">
               <ul className="list-disc list-inside space-y-1">
                 <li>Withdrawals are processed during business hours (Mon-Fri, 9 AM - 5 PM EST)</li>
                 <li>Processing times may vary based on your bank or card provider</li>

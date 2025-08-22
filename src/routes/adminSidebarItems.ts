@@ -1,7 +1,6 @@
 import AllWallets from "@/pages/admin/AllWallets";
 import AllUser from "@/pages/admin/AllUser";
 import Overview from "@/pages/admin/Overview";
-import MyWallet from "@/pages/MyWallet";
 import type { ISidebarItem } from "@/types";
 import AgentBlockUnblock from "@/pages/admin/AgentBlockUnblock";
 import AllTransaction from "@/pages/admin/AllTransaction";
@@ -14,18 +13,14 @@ export const adminSidebarItems: ISidebarItem[] = [
       {
         title: "Overview",
         url: "/admin/overview",
-        component: MyWallet,
+        component: Overview,
       },
     ],
   },
   {
     title: "Management",
     items: [
-      {
-        title: "Overview",
-        url: "/admin/overview",
-        component: Overview,
-      },
+      
       {
         title: "All Wallets",
         url: "/admin/all-wallets",
@@ -37,7 +32,7 @@ export const adminSidebarItems: ISidebarItem[] = [
         component: AllUser,
       },
       {
-        title: "Agent Block/Unblock",
+        title: "Manage agents",
         url: "/admin/agent-block-unblock",
         component: AgentBlockUnblock,
       },

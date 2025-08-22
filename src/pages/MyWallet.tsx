@@ -67,9 +67,9 @@ const MyWallet = () => {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
                 <div className="text-center">
-                    <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to load wallet</h3>
-                    <p className="text-gray-600 mb-4">Unable to fetch your wallet information.</p>
+                    <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-foreground mb-2">Failed to load wallet</h3>
+                    <p className="text-muted-foreground mb-4">Unable to fetch your wallet information.</p>
                     <Button onClick={() => refetch()}>Try Again</Button>
                 </div>
             </div>
@@ -80,9 +80,9 @@ const MyWallet = () => {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
                 <div className="text-center">
-                    <Wallet className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No wallet found</h3>
-                    <p className="text-gray-600">Your wallet information is not available.</p>
+                    <Wallet className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-foreground mb-2">No wallet found</h3>
+                    <p className="text-muted-foreground">Your wallet information is not available.</p>
                 </div>
             </div>
         );
@@ -91,8 +91,8 @@ const MyWallet = () => {
     return (
         <div className="container mx-auto px-4 py-8 max-w-6xl">
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">My Wallet</h1>
-                <p className="text-gray-600">Manage your digital wallet and track your transactions</p>
+                <h1 className="text-3xl font-bold text-foreground mb-2">My Wallet</h1>
+                <p className="text-muted-foreground">Manage your digital wallet and track your transactions</p>
             </div>
 
             {/* Main Balance Card */}
@@ -101,14 +101,14 @@ const MyWallet = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <CardTitle className="flex items-center space-x-2">
-                                <Wallet className="h-6 w-6 text-blue-600" />
+                                <Wallet className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                                 <span>Current Balance</span>
                             </CardTitle>
                             <CardDescription>Your available wallet balance</CardDescription>
                         </div>
                         <div className="flex items-center space-x-2">
                             {wallet.isBlocked && (
-                                <div className="flex items-center space-x-1 text-red-600">
+                                <div className="flex items-center space-x-1 text-red-600 dark:text-red-400">
                                     <Shield className="h-4 w-4" />
                                     <span className="text-sm font-medium">Blocked</span>
                                 </div>
@@ -125,17 +125,17 @@ const MyWallet = () => {
                 </CardHeader>
                 <CardContent>
                     <div className="text-center">
-                        <div className="text-4xl font-bold text-gray-900 mb-2">
+                        <div className="text-4xl font-bold text-foreground mb-2">
                             {formatCurrency(wallet.balance)}
                         </div>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                             Last updated: {formatDate(wallet.updatedAt)}
                         </p>
                     </div>
 
                     {/* Add Money Form */}
                     {showAddMoneyForm && (
-                        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                        <div className="mt-6 p-4 bg-muted/50 rounded-lg">
                             <form onSubmit={handleAddMoney} className="space-y-4">
                                 <div>
                                     <Label htmlFor="amount">Amount to Add</Label>
@@ -176,14 +176,14 @@ const MyWallet = () => {
                 {/* Daily Spending */}
                 <Card>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-600">Daily Spending</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Daily Spending</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="flex items-center space-x-2">
-                            <TrendingDown className="h-5 w-5 text-red-500" />
-                            <span className="text-2xl font-bold">{formatCurrency(wallet.dailySpentAmount)}</span>
+                            <TrendingDown className="h-5 w-5 text-red-600 dark:text-red-400" />
+                            <span className="text-2xl font-bold text-foreground">{formatCurrency(wallet.dailySpentAmount)}</span>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                             {wallet.dailyTransactionCount} transactions today
                         </p>
                     </CardContent>
@@ -192,14 +192,14 @@ const MyWallet = () => {
                 {/* Monthly Spending */}
                 <Card>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-600">Monthly Spending</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Monthly Spending</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="flex items-center space-x-2">
-                            <TrendingDown className="h-5 w-5 text-red-500" />
-                            <span className="text-2xl font-bold">{formatCurrency(wallet.monthlySpentAmount)}</span>
+                            <TrendingDown className="h-5 w-5 text-red-600 dark:text-red-400" />
+                            <span className="text-2xl font-bold text-foreground">{formatCurrency(wallet.monthlySpentAmount)}</span>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                             {wallet.monthlyTransactionCount} transactions this month
                         </p>
                     </CardContent>
@@ -208,16 +208,16 @@ const MyWallet = () => {
                 {/* Daily Reset */}
                 <Card>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-600">Daily Reset</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Daily Reset</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="flex items-center space-x-2">
-                            <Clock className="h-5 w-5 text-blue-500" />
-                            <span className="text-sm font-medium">
+                            <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                            <span className="text-sm font-medium text-foreground">
                                 {formatDate(wallet.lastDailyReset)}
                             </span>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                             Last daily reset
                         </p>
                     </CardContent>
@@ -226,16 +226,16 @@ const MyWallet = () => {
                 {/* Monthly Reset */}
                 <Card>
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-gray-600">Monthly Reset</CardTitle>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Monthly Reset</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="flex items-center space-x-2">
-                            <Calendar className="h-5 w-5 text-green-500" />
-                            <span className="text-sm font-medium">
+                            <Calendar className="h-5 w-5 text-green-600 dark:text-green-400" />
+                            <span className="text-sm font-medium text-foreground">
                                 {formatDate(wallet.lastMonthlyReset)}
                             </span>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                             Last monthly reset
                         </p>
                     </CardContent>
@@ -251,28 +251,28 @@ const MyWallet = () => {
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <Label className="text-sm font-medium text-gray-600">Wallet ID</Label>
-                            <p className="text-sm text-gray-900 font-mono">{wallet._id}</p>
+                            <Label className="text-sm font-medium text-muted-foreground">Wallet ID</Label>
+                            <p className="text-sm text-foreground font-mono">{wallet._id}</p>
                         </div>
                         <div>
-                            <Label className="text-sm font-medium text-gray-600">User ID</Label>
-                            <p className="text-sm text-gray-900 font-mono">{wallet.userId.toString()}</p>
+                            <Label className="text-sm font-medium text-muted-foreground">User ID</Label>
+                            <p className="text-sm text-foreground font-mono">{wallet.userId.toString()}</p>
                         </div>
                         <div>
-                            <Label className="text-sm font-medium text-gray-600">Status</Label>
+                            <Label className="text-sm font-medium text-muted-foreground">Status</Label>
                             <p className="text-sm">
                                 <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                                     wallet.isBlocked 
-                                        ? 'bg-red-100 text-red-800' 
-                                        : 'bg-green-100 text-green-800'
+                                        ? 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400' 
+                                        : 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400'
                                 }`}>
                                     {wallet.isBlocked ? 'Blocked' : 'Active'}
                                 </span>
                             </p>
                         </div>
                         <div>
-                            <Label className="text-sm font-medium text-gray-600">Created</Label>
-                            <p className="text-sm text-gray-900">{formatDate(wallet.createdAt)}</p>
+                            <Label className="text-sm font-medium text-muted-foreground">Created</Label>
+                            <p className="text-sm text-foreground">{formatDate(wallet.createdAt)}</p>
                         </div>
                     </div>
                 </CardContent>

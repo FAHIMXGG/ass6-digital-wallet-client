@@ -11,15 +11,12 @@ import {
   Loader2,
   AlertCircle,
   CheckCircle,
-  ArrowLeft,
   Send,
   Search,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router';
 
 const SendMoney = () => {
-  const navigate = useNavigate();
   const [receiverId, setReceiverId] = useState('');
   const [amount, setAmount] = useState('');
   const [selectedReceiver, setSelectedReceiver] = useState<any>(null);
@@ -124,10 +121,10 @@ const SendMoney = () => {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Wallet not found</h3>
-          <p className="text-gray-600 mb-4">Unable to load your wallet information.</p>
-          <Button onClick={() => navigate('/')}>Go Home</Button>
+          <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-foreground mb-2">Wallet not found</h3>
+          <p className="text-muted-foreground mb-4">Unable to load your wallet information.</p>
+          <Button onClick={() => window.location.href = '/'}>Go Home</Button>
         </div>
       </div>
     );
@@ -137,18 +134,9 @@ const SendMoney = () => {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       {/* Header */}
       <div className="mb-8">
-        <Button
-          variant="ghost"
-          onClick={() => navigate('/')}
-          className="mb-4"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Dashboard
-        </Button>
-        
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Send Money</h1>
-          <p className="text-gray-600">Send money to other users</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Send Money</h1>
+          <p className="text-muted-foreground">Send money to other users</p>
         </div>
       </div>
 
@@ -157,7 +145,7 @@ const SendMoney = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <Send className="h-5 w-5 text-blue-500" />
+              <Send className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               <span>Send Money</span>
             </CardTitle>
             <CardDescription>
@@ -166,12 +154,12 @@ const SendMoney = () => {
           </CardHeader>
           <CardContent>
             {/* My Wallet Info */}
-            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="text-sm text-blue-800">
+            <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+              <div className="text-sm text-blue-800 dark:text-blue-400">
                 <div className="font-medium">Your Wallet</div>
                 <div className="text-xs">{myWallet.userId.name}</div>
                 <div className="text-xs">{myWallet.userId.email}</div>
-                <div className="text-lg font-bold text-blue-600 mt-1">
+                <div className="text-lg font-bold text-blue-600 dark:text-blue-400 mt-1">
                   Balance: {formatCurrency(myWallet.balance)}
                 </div>
               </div>
@@ -190,8 +178,8 @@ const SendMoney = () => {
                   required
                 />
                 {selectedReceiver && (
-                  <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-md">
-                    <div className="text-sm text-green-800">
+                  <div className="mt-2 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
+                    <div className="text-sm text-green-800 dark:text-green-400">
                       <div className="font-medium">{selectedReceiver.name}</div>
                       <div className="text-xs">{selectedReceiver.email}</div>
                       <div className="text-xs">Phone: {selectedReceiver.phone}</div>
@@ -214,14 +202,14 @@ const SendMoney = () => {
                   step="0.01"
                   required
                 />
-                <div className="mt-1 text-xs text-gray-500">
+                <div className="mt-1 text-xs text-muted-foreground">
                   Available: {formatCurrency(myWallet.balance)}
                 </div>
               </div>
 
               {/* Quick Amount Buttons */}
               <div>
-                <Label className="text-sm text-gray-600">Quick Amounts</Label>
+                <Label className="text-sm text-muted-foreground">Quick Amounts</Label>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {[10, 25, 50, 100, 500].map((quickAmount) => (
                     <Button
@@ -240,7 +228,7 @@ const SendMoney = () => {
                     variant="outline"
                     size="sm"
                     onClick={handleMaxAmount}
-                    className="text-xs bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+                    className="text-xs bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30"
                   >
                     Max ({formatCurrency(myWallet.balance)})
                   </Button>
@@ -249,7 +237,7 @@ const SendMoney = () => {
 
               <Button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700"
+                className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700"
                 disabled={isSendMoneyLoading || !receiverId.trim() || !amount}
               >
                 {isSendMoneyLoading ? (
@@ -283,7 +271,7 @@ const SendMoney = () => {
             {/* Search */}
             <div className="mb-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search by email or phone number..."
                   value={searchTerm}
@@ -292,7 +280,7 @@ const SendMoney = () => {
                 />
               </div>
               {searchTerm.length > 0 && searchTerm.length < 2 && (
-                <div className="mt-1 text-xs text-gray-500">
+                <div className="mt-1 text-xs text-muted-foreground">
                   Type at least 2 characters to search
                 </div>
               )}
@@ -300,9 +288,9 @@ const SendMoney = () => {
 
             {searchTerm.length < 2 ? (
               <div className="text-center py-8">
-                <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Search Users</h3>
-                <p className="text-gray-600">
+                <Search className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-foreground mb-2">Search Users</h3>
+                <p className="text-muted-foreground">
                   Enter an email address or phone number to search for users
                 </p>
               </div>
@@ -318,35 +306,35 @@ const SendMoney = () => {
                     key={user._id}
                     className={`p-3 border rounded-lg cursor-pointer transition-colors ${
                       selectedReceiver?._id === user._id
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        ? 'border-blue-500 dark:border-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                        : 'border-border hover:border-border/60 hover:bg-muted/50'
                     }`}
                     onClick={() => handleReceiverSelect(user)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <div className="font-medium text-sm">{user.name}</div>
-                        <div className="text-xs text-gray-500">{user.email}</div>
-                        <div className="text-xs text-gray-500">{user.phone}</div>
-                        <div className="text-xs text-gray-400">ID: {user._id}</div>
+                        <div className="font-medium text-sm text-foreground">{user.name}</div>
+                        <div className="text-xs text-muted-foreground">{user.email}</div>
+                        <div className="text-xs text-muted-foreground">{user.phone}</div>
+                        <div className="text-xs text-muted-foreground/60">ID: {user._id}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-xs text-gray-500 capitalize">
+                        <div className="text-xs text-muted-foreground capitalize">
                           {user.role}
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-muted-foreground">
                           {user.isEmailVerified ? (
-                            <span className="text-green-600">Verified</span>
+                            <span className="text-green-600 dark:text-green-400">Verified</span>
                           ) : (
-                            <span className="text-yellow-600">Unverified</span>
+                            <span className="text-yellow-600 dark:text-yellow-400">Unverified</span>
                           )}
                         </div>
                         {user.role === 'agent' && (
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-muted-foreground">
                             {user.isApproved ? (
-                              <span className="text-green-600">Approved</span>
+                              <span className="text-green-600 dark:text-green-400">Approved</span>
                             ) : (
-                              <span className="text-red-600">Pending</span>
+                              <span className="text-red-600 dark:text-red-400">Pending</span>
                             )}
                           </div>
                         )}
@@ -357,9 +345,9 @@ const SendMoney = () => {
               </div>
             ) : (
               <div className="text-center py-8">
-                <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No users found</h3>
-                <p className="text-gray-600">
+                <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-foreground mb-2">No users found</h3>
+                <p className="text-muted-foreground">
                   No users found matching "{searchTerm}". Try searching with a different email or phone number.
                 </p>
               </div>
@@ -372,27 +360,27 @@ const SendMoney = () => {
       <Card className="mt-6">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <CheckCircle className="h-5 w-5 text-green-500" />
+            <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
             <span>How to Use</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div>
-              <h4 className="font-medium mb-2">Method 1: Search & Select</h4>
-              <p className="text-gray-600">
+              <h4 className="font-medium mb-2 text-foreground">Method 1: Search & Select</h4>
+              <p className="text-muted-foreground">
                 Search for users by email or phone number, then click on a user to auto-fill their receiver ID.
               </p>
             </div>
             <div>
-              <h4 className="font-medium mb-2">Method 2: Enter Receiver ID</h4>
-              <p className="text-gray-600">
+              <h4 className="font-medium mb-2 text-foreground">Method 2: Enter Receiver ID</h4>
+              <p className="text-muted-foreground">
                 Manually enter the receiver ID in the input field if you already know the user's ID.
               </p>
             </div>
             <div>
-              <h4 className="font-medium mb-2">Quick Amounts</h4>
-              <p className="text-gray-600">
+              <h4 className="font-medium mb-2 text-foreground">Quick Amounts</h4>
+              <p className="text-muted-foreground">
                 Use the quick amount buttons to quickly set common amounts, or use "Max" to send your full balance.
               </p>
             </div>
@@ -401,15 +389,15 @@ const SendMoney = () => {
       </Card>
 
       {/* Notice */}
-      <Card className="mt-6 border-blue-200 bg-blue-50">
+      <Card className="mt-6 border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2 text-blue-700">
+          <CardTitle className="flex items-center space-x-2 text-blue-700 dark:text-blue-400">
             <AlertCircle className="h-5 w-5" />
             <span>Important Notice</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-sm text-blue-700">
+          <div className="text-sm text-blue-700 dark:text-blue-400">
             <ul className="list-disc list-inside space-y-1">
               <li>Money transfers are instant and irreversible</li>
               <li>Ensure you have sufficient balance before sending</li>

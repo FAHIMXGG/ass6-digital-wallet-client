@@ -167,9 +167,9 @@ const AllWallets = () => {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Failed to load wallets</h3>
-          <p className="text-gray-600 mb-4">Unable to fetch wallet information.</p>
+          <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-foreground mb-2">Failed to load wallets</h3>
+          <p className="text-muted-foreground mb-4">Unable to fetch wallet information.</p>
           <Button onClick={() => refetch()}>Try Again</Button>
         </div>
       </div>
@@ -179,74 +179,74 @@ const AllWallets = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">All Wallets</h1>
-        <p className="text-gray-600">Manage and monitor all user wallets</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">All Wallets</h1>
+        <p className="text-muted-foreground">Manage and monitor all user wallets</p>
       </div>
 
              {/* Statistics Cards */}
        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
          <Card>
            <CardHeader className="pb-2">
-             <CardTitle className="text-sm font-medium text-gray-600 flex items-center space-x-2">
+             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center space-x-2">
                <Users className="h-4 w-4" />
                <span>Total Wallets</span>
              </CardTitle>
            </CardHeader>
            <CardContent>
-             <div className="text-2xl font-bold">{stats.totalWallets}</div>
-             <p className="text-xs text-gray-500 mt-1">All wallets</p>
+             <div className="text-2xl font-bold text-foreground">{stats.totalWallets}</div>
+             <p className="text-xs text-muted-foreground mt-1">All wallets</p>
            </CardContent>
          </Card>
 
          <Card>
            <CardHeader className="pb-2">
-             <CardTitle className="text-sm font-medium text-gray-600 flex items-center space-x-2">
-               <Shield className="h-4 w-4 text-green-500" />
+             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center space-x-2">
+               <Shield className="h-4 w-4 text-green-600 dark:text-green-400" />
                <span>Active (Page)</span>
              </CardTitle>
            </CardHeader>
            <CardContent>
-             <div className="text-2xl font-bold text-green-600">{stats.activeWallets}</div>
-             <p className="text-xs text-gray-500 mt-1">Current page only</p>
+             <div className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.activeWallets}</div>
+             <p className="text-xs text-muted-foreground mt-1">Current page only</p>
            </CardContent>
          </Card>
 
          <Card>
            <CardHeader className="pb-2">
-             <CardTitle className="text-sm font-medium text-gray-600 flex items-center space-x-2">
-               <ShieldOff className="h-4 w-4 text-red-500" />
+             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center space-x-2">
+               <ShieldOff className="h-4 w-4 text-red-600 dark:text-red-400" />
                <span>Blocked (Page)</span>
              </CardTitle>
            </CardHeader>
            <CardContent>
-             <div className="text-2xl font-bold text-red-600">{stats.blockedWallets}</div>
-             <p className="text-xs text-gray-500 mt-1">Current page only</p>
+             <div className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.blockedWallets}</div>
+             <p className="text-xs text-muted-foreground mt-1">Current page only</p>
            </CardContent>
          </Card>
 
          <Card>
            <CardHeader className="pb-2">
-             <CardTitle className="text-sm font-medium text-gray-600 flex items-center space-x-2">
-               <DollarSign className="h-4 w-4 text-blue-500" />
+             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center space-x-2">
+               <DollarSign className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                <span>Balance (Page)</span>
              </CardTitle>
            </CardHeader>
            <CardContent>
-             <div className="text-2xl font-bold text-blue-600">{formatCurrency(stats.totalBalance)}</div>
-             <p className="text-xs text-gray-500 mt-1">Current page only</p>
+             <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{formatCurrency(stats.totalBalance)}</div>
+             <p className="text-xs text-muted-foreground mt-1">Current page only</p>
            </CardContent>
          </Card>
 
          <Card>
            <CardHeader className="pb-2">
-             <CardTitle className="text-sm font-medium text-gray-600 flex items-center space-x-2">
-               <Activity className="h-4 w-4 text-purple-500" />
+             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center space-x-2">
+               <Activity className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                <span>Avg Balance (Page)</span>
              </CardTitle>
            </CardHeader>
            <CardContent>
-             <div className="text-2xl font-bold text-purple-600">{formatCurrency(stats.avgBalance)}</div>
-             <p className="text-xs text-gray-500 mt-1">Current page only</p>
+             <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{formatCurrency(stats.avgBalance)}</div>
+             <p className="text-xs text-muted-foreground mt-1">Current page only</p>
            </CardContent>
          </Card>
        </div>
@@ -264,7 +264,7 @@ const AllWallets = () => {
             <div>
               <Label htmlFor="search">Search</Label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                  <Input
                    id="search"
                    placeholder="Search by name, email, or wallet ID..."
@@ -281,7 +281,7 @@ const AllWallets = () => {
                 id="status"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as any)}
-                className="w-full h-9 px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full h-9 px-3 py-1 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring bg-background text-foreground"
               >
                 <option value="all">All Wallets</option>
                 <option value="active">Active Only</option>
@@ -311,12 +311,12 @@ const AllWallets = () => {
 
              {/* Results Summary */}
        <div className="mb-4 flex items-center justify-between">
-         <p className="text-sm text-gray-600">
+         <p className="text-sm text-muted-foreground">
            Showing {((currentPage - 1) * itemsPerPage) + 1} to{' '}
            {Math.min(currentPage * itemsPerPage, totalItems)} of{' '}
            {totalItems} wallets
          </p>
-         <p className="text-sm text-gray-600">
+         <p className="text-sm text-muted-foreground">
            Page {currentPage} of {totalPages}
          </p>
        </div>
@@ -376,22 +376,22 @@ const AllWallets = () => {
                    <TableRow key={wallet._id}>
                      <TableCell className="font-mono text-sm">
                        <div>
-                         <div className="font-medium">{wallet.userId.name}</div>
-                         <div className="text-xs text-gray-500">{wallet.userId.email}</div>
-                         <div className="text-xs text-gray-400">{wallet.userId.role}</div>
+                         <div className="font-medium text-foreground">{wallet.userId.name}</div>
+                         <div className="text-xs text-muted-foreground">{wallet.userId.email}</div>
+                         <div className="text-xs text-muted-foreground/60">{wallet.userId.role}</div>
                        </div>
                      </TableCell>
-                     <TableCell className="font-mono text-sm">
+                     <TableCell className="font-mono text-sm text-foreground">
                        {wallet._id}
                      </TableCell>
-                    <TableCell className="font-semibold">
+                    <TableCell className="font-semibold text-foreground">
                       {formatCurrency(wallet.balance)}
                     </TableCell>
                     <TableCell>
                       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                         wallet.isBlocked 
-                          ? 'bg-red-100 text-red-800' 
-                          : 'bg-green-100 text-green-800'
+                          ? 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400' 
+                          : 'bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400'
                       }`}>
                         {wallet.isBlocked ? (
                           <>
@@ -408,19 +408,19 @@ const AllWallets = () => {
                     </TableCell>
                     <TableCell>
                       <div className="text-sm">
-                        <div className="font-medium">{formatCurrency(wallet.dailySpentAmount)}</div>
-                        <div className="text-gray-500">{wallet.dailyTransactionCount} transactions</div>
+                        <div className="font-medium text-foreground">{formatCurrency(wallet.dailySpentAmount)}</div>
+                        <div className="text-muted-foreground">{wallet.dailyTransactionCount} transactions</div>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className="text-sm">
-                        <div className="font-medium">{formatCurrency(wallet.monthlySpentAmount)}</div>
-                        <div className="text-gray-500">{wallet.monthlyTransactionCount} transactions</div>
+                        <div className="font-medium text-foreground">{formatCurrency(wallet.monthlySpentAmount)}</div>
+                        <div className="text-muted-foreground">{wallet.monthlyTransactionCount} transactions</div>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className="text-sm">
-                        <div className="font-medium">{formatDate(wallet.createdAt)}</div>
+                        <div className="font-medium text-foreground">{formatDate(wallet.createdAt)}</div>
                       </div>
                     </TableCell>
                                          <TableCell>
@@ -433,7 +433,7 @@ const AllWallets = () => {
                              }
                              e.target.value = '';
                            }}
-                           className="w-full h-8 px-2 py-1 text-xs border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           className="w-full h-8 px-2 py-1 text-xs border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring bg-background text-foreground"
                            disabled={isToggling}
                          >
                            <option value="">Actions</option>
@@ -449,9 +449,9 @@ const AllWallets = () => {
             </Table>
           ) : (
             <div className="text-center py-8">
-              <Wallet className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No wallets found</h3>
-              <p className="text-gray-600">
+              <Wallet className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2">No wallets found</h3>
+              <p className="text-muted-foreground">
                 {searchTerm || statusFilter !== 'all' 
                   ? 'Try adjusting your search or filters.' 
                   : 'No wallets are currently available.'}

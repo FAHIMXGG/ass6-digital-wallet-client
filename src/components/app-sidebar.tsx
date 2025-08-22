@@ -38,7 +38,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <div className="flex items-center justify-between px-4 py-3">
           <Link to="/" className="flex items-center space-x-2">
             {/* <Logo /> */}
-            <span className="font-semibold text-foreground">Digital C</span>
+            <span className="font-semibold text-foreground">Wallet</span>
           </Link>
           <ModeToggle />
         </div>

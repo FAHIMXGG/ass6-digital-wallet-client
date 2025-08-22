@@ -3,6 +3,7 @@ import MyWallet from "@/pages/MyWallet";
 import UpdateUser from "@/pages/UpdateUser";
 import SendMoney from "@/pages/user/SendMoney";
 import Withdraw from "@/pages/user/Withdraw";
+import UserOverview from "@/pages/user/UserOverview";
 
 export const userSidebarItems = [
   {
@@ -11,7 +12,7 @@ export const userSidebarItems = [
       {
         title: "Overview",
         url: "/user/overview",
-        component: MyWallet,
+        component: UserOverview,
       },
     ],
   },
