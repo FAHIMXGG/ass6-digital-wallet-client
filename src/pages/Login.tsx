@@ -74,18 +74,22 @@ const Login = () => {
             setIsLoading(false);
             console.error('Login failed:', err);
             // Handle error
-            if ((err as any).status === 403) {
+            if ((err as any).status === 403 ) {
                 toast.error("Your account is not verified");
                 navigate("/verify", { state: data.email });
             }
             if ((err as any).status === 401) {
                 toast.error("Invalid credentials");
             }
+            if ((err as any).status === 403 && (err as any).data.message === "Agent not yet approved by admin.") {
+                toast.error("Agent not yet approved by admin.");
+                navigate("/login");
+            }
         }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 {/* Header */}
                 <div className="text-center mb-8">
@@ -94,12 +98,12 @@ const Login = () => {
                             <Shield className="w-6 h-6 text-white" />
                         </div>
                     </div>
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome back</h1>
-                    <p className="text-gray-600">Sign in to your DigitalWallet account</p>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Welcome back</h1>
+                    <p className="text-gray-600 dark:text-gray-300">Sign in to your DigitalWallet account</p>
                 </div>
 
                 {/* Login Form */}
-                <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-8">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                             {/* Email Field */}
@@ -108,16 +112,16 @@ const Login = () => {
                                 name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-sm font-medium text-gray-700">
+                                        <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-200">
                                             Email address
                                         </FormLabel>
                                         <div className="relative">
-                                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
                                             <FormControl>
                                                 <input
                                                     {...field}
                                                     type="email"
-                                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                                     placeholder="Enter your email"
                                                 />
                                             </FormControl>
@@ -133,23 +137,23 @@ const Login = () => {
                                 name="password"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-sm font-medium text-gray-700">
+                                        <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-200">
                                             Password
                                         </FormLabel>
                                         <div className="relative">
-                                            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
                                             <FormControl>
                                                 <input
                                                     {...field}
                                                     type={showPassword ? 'text' : 'password'}
-                                                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                                                    className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                                     placeholder="Enter your password"
                                                 />
                                             </FormControl>
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                                             >
                                                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                             </button>
@@ -164,13 +168,13 @@ const Login = () => {
                                 <label className="flex items-center space-x-2">
                                     <input
                                         type="checkbox"
-                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                        className="w-4 h-4 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 dark:bg-gray-700 dark:checked:bg-blue-600"
                                     />
-                                    <span className="text-sm text-gray-700">Remember me</span>
+                                    <span className="text-sm text-gray-700 dark:text-gray-200">Remember me</span>
                                 </label>
                                 <a
                                     href="/forgot-password"
-                                    className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                                    className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors"
                                 >
                                     Forgot password?
                                 </a>
@@ -199,16 +203,16 @@ const Login = () => {
 
                     {/* Divider */}
                     <div className="my-6 flex items-center">
-                        <div className="flex-1 border-t border-gray-300"></div>
-                        <span className="px-4 text-sm text-gray-500">or</span>
-                        <div className="flex-1 border-t border-gray-300"></div>
+                        <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
+                        <span className="px-4 text-sm text-gray-500 dark:text-gray-400">or</span>
+                        <div className="flex-1 border-t border-gray-300 dark:border-gray-600"></div>
                     </div>
 
                     {/* Social Login */}
                     <div className="space-y-3">
                         <Button
                             variant="outline"
-                            className="w-full py-3 border-gray-300 hover:bg-gray-50 transition-colors"
+                            className="w-full py-3 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-200"
                         >
                             <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -222,11 +226,11 @@ const Login = () => {
 
                     {/* Sign Up Link */}
                     <div className="mt-6 text-center">
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
                             Don't have an account?{' '}
                             <a
                                 href="/register"
-                                className="text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors"
                             >
                                 Sign up
                             </a>
@@ -236,7 +240,7 @@ const Login = () => {
 
                 {/* Security Notice */}
                 <div className="mt-6 text-center">
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
                         🔒 Your data is protected with bank-level security
                     </p>
                 </div>

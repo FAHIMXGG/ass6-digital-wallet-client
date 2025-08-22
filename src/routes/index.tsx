@@ -14,6 +14,10 @@ import { withAuth } from "@/utils/withAuth";
 import { role } from "@/constants/role";
 import type { TRole } from "@/types";
 import { agentSidebarItems } from "./agentSidebarItems";
+import About from "@/pages/About";
+import Features from "@/pages/Features";
+import FAQ from "@/pages/FAQ";
+import Home from "@/pages/Home";
 
 export const router = createBrowserRouter([
   {
@@ -24,7 +28,22 @@ export const router = createBrowserRouter([
         Component: Contact,
         path: "contact",
       },
-      
+      {
+        Component: About,
+        path: "about",
+      },
+      {
+        Component: Features,
+        path: "features",
+      },
+      {
+        Component: FAQ,
+        path: "faq",
+      },
+      {
+        Component: Home,
+        path: "/",
+      },
     ],
   },
   {
