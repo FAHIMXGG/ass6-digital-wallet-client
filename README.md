@@ -1,4 +1,9 @@
 # Digital C - Digital Wallet Platform
+Credentials:
+admin: a1@example.com || password123
+agent: ag1@example.com || password123
+
+live client:https://ass6-digital-wallet-client.vercel.app/
 
 A modern, feature-rich digital wallet platform built with React and TypeScript, offering secure money transfers, transaction management, and multi-role user support.
 
