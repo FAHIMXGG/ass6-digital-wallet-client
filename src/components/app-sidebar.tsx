@@ -19,6 +19,7 @@ import { adminSidebarItems } from "@/routes/adminSidebarItems";
 import { getSidebarItems } from "@/utils/getSidebarItems";
 import { ModeToggle } from "@/components/layout/mode-toggle";
 import { Home } from "lucide-react";
+import { GuidedTour } from "@/components/GuidedTour";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: userData } = useUserInfoQuery(undefined);
@@ -35,12 +36,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center justify-between px-4 py-3" data-tour="sidebar-header">
           <Link to="/" className="flex items-center space-x-2">
             {/* <Logo /> */}
             <span className="font-semibold text-foreground">Wallet</span>
           </Link>
-          <ModeToggle />
+          <ModeToggle data-tour="settings-toggle" />
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -50,7 +51,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild className={location.pathname === "/" ? "bg-accent text-accent-foreground" : ""}>
-                  <Link to="/" className="flex items-center space-x-2">
+                  <Link to="/" className="flex items-center space-x-2" data-tour="home-link">
                     <Home className="h-4 w-4" />
                     <span>Home</span>
                   </Link>
@@ -68,10 +69,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenu>
                 {item.items.map((item) => {
                   const isActive = location.pathname === item.url;
+                  // Add tour data attributes based on item title
+                  const getTourAttribute = (title: string) => {
+                    const lowerTitle = title.toLowerCase();
+                    // More specific matching for better tour coverage
+                    if (lowerTitle.includes('wallet')) return 'wallet-section';
+                    if (lowerTitle.includes('transaction') || lowerTitle.includes('history')) return 'transactions-section';
+                    if (lowerTitle.includes('update profile') || lowerTitle.includes('update user')) return 'user-management';
+                    if (lowerTitle.includes('overview')) return 'analytics-section';
+                    if (lowerTitle.includes('settings')) return 'settings-section';
+                    if (lowerTitle.includes('send') || lowerTitle.includes('withdraw')) return 'transactions-section';
+                    return null;
+                  };
+                  
+                  const tourAttribute = getTourAttribute(item.title);
+                  
                   return (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild className={isActive ? "bg-accent text-accent-foreground" : ""}>
-                        <Link to={item.url}>{item.title}</Link>
+                        <Link to={item.url} {...(tourAttribute && { 'data-tour': tourAttribute })}>
+                          {item.title}
+                        </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   );
@@ -82,6 +100,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ))}
       </SidebarContent>
       <SidebarRail />
+      <GuidedTour />
     </Sidebar>
   );
 }

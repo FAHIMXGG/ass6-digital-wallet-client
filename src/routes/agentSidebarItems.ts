@@ -4,6 +4,7 @@ import CashOut from "@/pages/agent/CashOut";
 import AgentOverview from "@/pages/agent/AgentOverview";
 import MyHistory from "@/pages/MyHistory";
 import UpdateUser from "@/pages/UpdateUser";
+import Settings from "@/pages/Settings";
 import type { ISidebarItem } from "@/types";
 
 export const agentSidebarItems: ISidebarItem[] = [
@@ -39,6 +40,11 @@ export const agentSidebarItems: ISidebarItem[] = [
         title: "Update User",
         url: "/agent/update-user",
         component: UpdateUser,
+      },
+      {
+        title: "Settings",
+        url: "/agent/settings",
+        component: Settings,
       },
     ],
   }

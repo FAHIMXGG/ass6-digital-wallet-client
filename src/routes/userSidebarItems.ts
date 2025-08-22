@@ -4,6 +4,7 @@ import UpdateUser from "@/pages/UpdateUser";
 import SendMoney from "@/pages/user/SendMoney";
 import Withdraw from "@/pages/user/Withdraw";
 import UserOverview from "@/pages/user/UserOverview";
+import Settings from "@/pages/Settings";
 
 export const userSidebarItems = [
   {
@@ -43,6 +44,11 @@ export const userSidebarItems = [
         title: "Update Profile",
         url: "/user/update-profile",
         component: UpdateUser,
+      },
+      {
+        title: "Settings",
+        url: "/user/settings",
+        component: Settings,
       },
     ],
   }
