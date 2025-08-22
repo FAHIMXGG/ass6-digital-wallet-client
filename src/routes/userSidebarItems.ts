@@ -1,5 +1,6 @@
 import MyHistory from "@/pages/MyHistory";
 import MyWallet from "@/pages/MyWallet";
+import UpdateUser from "@/pages/UpdateUser";
 import SendMoney from "@/pages/user/SendMoney";
 import Withdraw from "@/pages/user/Withdraw";
 
@@ -37,7 +38,11 @@ export const userSidebarItems = [
         url: "/user/my-history",
         component: MyHistory,
       },
-      
+      {
+        title: "Update Profile",
+        url: "/user/update-profile",
+        component: UpdateUser,
+      },
     ],
   }
 ];

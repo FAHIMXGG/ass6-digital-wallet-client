@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 
-export type { ISendOtp, IVerifyOtp, ILogin } from "./auth.type";
+export type { ISendOtp, IVerifyOtp, ILogin, IChangePassword } from "./auth.type";
 export type { IWallet, IWalletUser, IAddMoneyRequest } from "./wallet.type";
 
 export interface IResponse<T> {

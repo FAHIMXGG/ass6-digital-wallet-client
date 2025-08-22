@@ -4,7 +4,7 @@ import type { IResponse } from "@/types";
 export interface ITransaction {
   _id: string;
   userId: string;
-  type: "send" | "receive" | "withdraw" | "deposit";
+  type: "send" | "receive" | "withdraw" | "deposit" | "cash_in" | "cash_out";
   amount: number;
   status: "pending" | "completed" | "failed" | "cancelled";
   description?: string;
@@ -50,7 +50,7 @@ export interface ITransactionsResponse {
 }
 
 export interface IGetTransactionsParams {
-  type?: "send" | "receive" | "withdraw" | "deposit";
+  type?: "send" | "receive" | "withdraw" | "deposit" | "cash_in" | "cash_out";
   status?: "pending" | "completed" | "failed" | "cancelled";
   limit?: number;
   page?: number;
@@ -126,11 +126,12 @@ export const transactionsApi = baseApi.injectEndpoints({
       }),
       providesTags: (result, error, id) => [{ type: "TRANSACTION", id }],
     }),
+
   }),
 });
 
 export const { 
   useGetTransactionsQuery, 
   useGetMyTransactionsQuery,
-  useGetTransactionByIdQuery 
+  useGetTransactionByIdQuery
 } = transactionsApi;

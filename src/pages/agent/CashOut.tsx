@@ -3,7 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useCashOutMutation, useAllWalletsQuery } from '@/redux/features/wallet/wallet.api';
+import { useCashOutMutation } from '@/redux/features/wallet/wallet.api';
+import { useSearchUsersQuery } from '@/redux/features/user/user.api';
 import {
   DollarSign,
   User,
@@ -12,6 +13,7 @@ import {
   CheckCircle,
   ArrowLeft,
   Minus,
+  Search,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router';
@@ -20,15 +22,18 @@ const CashOut = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState('');
   const [amount, setAmount] = useState('');
-  const [selectedWallet, setSelectedWallet] = useState<any>(null);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [searchTerm, setSearchTerm] = useState('');
   
   const [cashOut, { isLoading: isCashOutLoading }] = useCashOutMutation();
-  const { data: walletsData, isLoading: isWalletsLoading } = useAllWalletsQuery({
-    page: 1,
-    limit: 100, // Get more wallets for selection
-  });
+  
+  // Only search when there's a search term with at least 2 characters
+  const { data: searchUsersData, isLoading: isSearchLoading } = useSearchUsersQuery(
+    { search: searchTerm, limit: 20 },
+    { skip: searchTerm.length < 2 }
+  );
 
-  const wallets = walletsData?.data?.data || [];
+  const searchedUsers = searchUsersData?.data || [];
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -37,9 +42,9 @@ const CashOut = () => {
     }).format(amount);
   };
 
-  const handleWalletSelect = (wallet: any) => {
-    setSelectedWallet(wallet);
-    setUserId(wallet.userId._id);
+  const handleUserSelect = (user: any) => {
+    setSelectedUser(user);
+    setUserId(user._id);
   };
 
   const handleCashOut = async (e: React.FormEvent) => {
@@ -56,12 +61,6 @@ const CashOut = () => {
     }
 
     const cashOutAmount = parseFloat(amount);
-    
-    // Check if user has sufficient balance
-    if (selectedWallet && cashOutAmount > selectedWallet.balance) {
-      toast.error(`Insufficient balance. Available: ${formatCurrency(selectedWallet.balance)}`);
-      return;
-    }
 
     try {
       await cashOut({
@@ -69,10 +68,11 @@ const CashOut = () => {
         amount: cashOutAmount,
       }).unwrap();
       
-      toast.success(`Successfully withdrew ${formatCurrency(cashOutAmount)} from wallet`);
+      toast.success(`Successfully withdrew ${formatCurrency(cashOutAmount)} from ${selectedUser?.name || 'user'}'s wallet`);
       setAmount('');
-      setSelectedWallet(null);
+      setSelectedUser(null);
       setUserId('');
+      setSearchTerm('');
     } catch (error: any) {
       console.error('Cash out error:', error);
       toast.error(error?.data?.message || 'Failed to withdraw money from wallet');
@@ -84,9 +84,9 @@ const CashOut = () => {
   };
 
   const handleMaxAmount = () => {
-    if (selectedWallet) {
-      setAmount(selectedWallet.balance.toString());
-    }
+    // Note: Max amount functionality will be limited since we don't have wallet balance from user search
+    // This can be enhanced by fetching wallet info when user is selected
+    toast.info('Please enter the maximum amount manually');
   };
 
   return (
@@ -117,7 +117,7 @@ const CashOut = () => {
               <span>Withdraw Money from Wallet</span>
             </CardTitle>
             <CardDescription>
-              Enter user ID and amount to withdraw money from their wallet
+              Search for a user or enter user ID and amount to withdraw money from their wallet
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -133,12 +133,13 @@ const CashOut = () => {
                   className="mt-1"
                   required
                 />
-                {selectedWallet && (
+                {selectedUser && (
                   <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
                     <div className="text-sm text-blue-800">
-                      <div className="font-medium">{selectedWallet.userId.name}</div>
-                      <div className="text-xs">{selectedWallet.userId.email}</div>
-                      <div className="text-xs">Current Balance: {formatCurrency(selectedWallet.balance)}</div>
+                      <div className="font-medium">{selectedUser.name}</div>
+                      <div className="text-xs">{selectedUser.email}</div>
+                      <div className="text-xs">Phone: {selectedUser.phone}</div>
+                      <div className="text-xs">ID: {selectedUser._id}</div>
                     </div>
                   </div>
                 )}
@@ -157,11 +158,6 @@ const CashOut = () => {
                   step="0.01"
                   required
                 />
-                {selectedWallet && (
-                  <div className="mt-1 text-xs text-gray-500">
-                    Available: {formatCurrency(selectedWallet.balance)}
-                  </div>
-                )}
               </div>
 
               {/* Quick Amount Buttons */}
@@ -180,17 +176,16 @@ const CashOut = () => {
                       {formatCurrency(quickAmount)}
                     </Button>
                   ))}
-                  {selectedWallet && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={handleMaxAmount}
-                      className="text-xs bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
-                    >
-                      Max ({formatCurrency(selectedWallet.balance)})
-                    </Button>
-                  )}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleMaxAmount}
+                    className="text-xs bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
+                    disabled={!selectedUser}
+                  >
+                    Max Amount
+                  </Button>
                 </div>
               </div>
 
@@ -223,44 +218,80 @@ const CashOut = () => {
               <span>Select User</span>
             </CardTitle>
             <CardDescription>
-              Choose a user from the list to auto-fill the user ID
+              Search by email or phone number to find and select a user
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {isWalletsLoading ? (
+            {/* Search */}
+            <div className="mb-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Search by email or phone number..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              {searchTerm.length > 0 && searchTerm.length < 2 && (
+                <div className="mt-1 text-xs text-gray-500">
+                  Type at least 2 characters to search
+                </div>
+              )}
+            </div>
+
+            {searchTerm.length < 2 ? (
+              <div className="text-center py-8">
+                <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Search Users</h3>
+                <p className="text-gray-600">
+                  Enter an email address or phone number to search for users
+                </p>
+              </div>
+            ) : isSearchLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin" />
-                <span className="ml-2">Loading users...</span>
+                <span className="ml-2">Searching users...</span>
               </div>
-            ) : wallets.length > 0 ? (
+            ) : searchedUsers.length > 0 ? (
               <div className="space-y-2 max-h-96 overflow-y-auto">
-                {wallets.map((wallet) => (
+                {searchedUsers.map((user) => (
                   <div
-                    key={wallet._id}
+                    key={user._id}
                     className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                      selectedWallet?._id === wallet._id
+                      selectedUser?._id === user._id
                         ? 'border-red-500 bg-red-50'
                         : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                     }`}
-                    onClick={() => handleWalletSelect(wallet)}
+                    onClick={() => handleUserSelect(user)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <div className="font-medium text-sm">{wallet.userId.name}</div>
-                        <div className="text-xs text-gray-500">{wallet.userId.email}</div>
-                        <div className="text-xs text-gray-400">ID: {wallet.userId._id}</div>
+                        <div className="font-medium text-sm">{user.name}</div>
+                        <div className="text-xs text-gray-500">{user.email}</div>
+                        <div className="text-xs text-gray-500">{user.phone}</div>
+                        <div className="text-xs text-gray-400">ID: {user._id}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm font-semibold text-green-600">
-                          {formatCurrency(wallet.balance)}
+                        <div className="text-xs text-gray-500 capitalize">
+                          {user.role}
                         </div>
                         <div className="text-xs text-gray-500">
-                          {wallet.isBlocked ? (
-                            <span className="text-red-600">Blocked</span>
+                          {user.isEmailVerified ? (
+                            <span className="text-green-600">Verified</span>
                           ) : (
-                            <span className="text-green-600">Active</span>
+                            <span className="text-yellow-600">Unverified</span>
                           )}
                         </div>
+                        {user.role === 'agent' && (
+                          <div className="text-xs text-gray-500">
+                            {user.isApproved ? (
+                              <span className="text-green-600">Approved</span>
+                            ) : (
+                              <span className="text-red-600">Pending</span>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -270,7 +301,9 @@ const CashOut = () => {
               <div className="text-center py-8">
                 <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">No users found</h3>
-                <p className="text-gray-600">No wallets are currently available.</p>
+                <p className="text-gray-600">
+                  No users found matching "{searchTerm}". Try searching with a different email or phone number.
+                </p>
               </div>
             )}
           </CardContent>
@@ -288,21 +321,21 @@ const CashOut = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div>
-              <h4 className="font-medium mb-2">Method 1: Select User</h4>
+              <h4 className="font-medium mb-2">Method 1: Search & Select</h4>
               <p className="text-gray-600">
-                Click on a user from the right panel to auto-fill their user ID and see their current balance.
+                Search for users by email or phone number, then click on a user to auto-fill their user ID.
               </p>
             </div>
             <div>
               <h4 className="font-medium mb-2">Method 2: Enter User ID</h4>
               <p className="text-gray-600">
-                Manually enter the user ID in the input field. You can copy it from the user list or other sources.
+                Manually enter the user ID in the input field if you already know the user's ID.
               </p>
             </div>
             <div>
               <h4 className="font-medium mb-2">Quick Amounts</h4>
               <p className="text-gray-600">
-                Use the quick amount buttons to quickly set common amounts, or use "Max" to withdraw the full balance.
+                Use the quick amount buttons to quickly set common amounts for cash out operations.
               </p>
             </div>
           </div>
@@ -333,3 +366,4 @@ const CashOut = () => {
 };
 
 export default CashOut;
+

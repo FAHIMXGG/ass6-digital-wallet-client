@@ -3,7 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useSendMoneyMutation, useMyWalletQuery, useAllWalletsQuery } from '@/redux/features/wallet/wallet.api';
+import { useSendMoneyMutation, useMyWalletQuery } from '@/redux/features/wallet/wallet.api';
+import { useSearchUsersQuery } from '@/redux/features/user/user.api';
 import {
   DollarSign,
   User,
@@ -23,27 +24,23 @@ const SendMoney = () => {
   const [amount, setAmount] = useState('');
   const [selectedReceiver, setSelectedReceiver] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  console.log(searchTerm);
   
   const [sendMoney, { isLoading: isSendMoneyLoading }] = useSendMoneyMutation();
   const { data: myWalletData, isLoading: isMyWalletLoading } = useMyWalletQuery();
-  const { data: walletsData, isLoading: isWalletsLoading } = useAllWalletsQuery({
-    page: 1,
-    limit: 100, // Get more wallets for selection
-  });
+  
+  // Only search when there's a search term with at least 2 characters
+  const { data: searchUsersData, isLoading: isSearchLoading } = useSearchUsersQuery(
+    { search: searchTerm, limit: 20 },
+    { skip: searchTerm.length < 2 }
+  );
 
   const myWallet = myWalletData?.data;
-  const allWallets = walletsData?.data?.data || [];
+  const searchedUsers = searchUsersData?.data || [];
 
-  // Filter wallets based on search term (excluding current user)
-  const filteredWallets = allWallets.filter((wallet) => {
-    if (!myWallet || wallet.userId._id === myWallet.userId._id) return false;
-    
-    const searchLower = searchTerm.toLowerCase();
-    return (
-      wallet.userId.name.toLowerCase().includes(searchLower) ||
-      wallet.userId.email.toLowerCase().includes(searchLower) ||
-      wallet.userId._id.toLowerCase().includes(searchLower)
-    );
+  // Filter out current user from search results
+  const filteredUsers = searchedUsers.filter((user) => {
+    return myWallet ? user._id !== myWallet.userId._id : true;
   });
 
   const formatCurrency = (amount: number) => {
@@ -53,9 +50,9 @@ const SendMoney = () => {
     }).format(amount);
   };
 
-  const handleReceiverSelect = (wallet: any) => {
-    setSelectedReceiver(wallet);
-    setReceiverId(wallet.userId._id);
+  const handleReceiverSelect = (user: any) => {
+    setSelectedReceiver(user);
+    setReceiverId(user._id);
   };
 
   const handleSendMoney = async (e: React.FormEvent) => {
@@ -91,10 +88,11 @@ const SendMoney = () => {
         amount: sendAmount,
       }).unwrap();
       
-      toast.success(`Successfully sent ${formatCurrency(sendAmount)} to ${selectedReceiver?.userId.name || 'user'}`);
+      toast.success(`Successfully sent ${formatCurrency(sendAmount)} to ${selectedReceiver?.name || 'user'}`);
       setAmount('');
       setSelectedReceiver(null);
       setReceiverId('');
+      setSearchTerm('');
     } catch (error: any) {
       console.error('Send money error:', error);
       toast.error(error?.data?.message || 'Failed to send money');
@@ -163,7 +161,7 @@ const SendMoney = () => {
               <span>Send Money</span>
             </CardTitle>
             <CardDescription>
-              Enter receiver ID and amount to send money
+              Search for a user or enter receiver ID and amount to send money
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -194,9 +192,10 @@ const SendMoney = () => {
                 {selectedReceiver && (
                   <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-md">
                     <div className="text-sm text-green-800">
-                      <div className="font-medium">{selectedReceiver.userId.name}</div>
-                      <div className="text-xs">{selectedReceiver.userId.email}</div>
-                      <div className="text-xs">Current Balance: {formatCurrency(selectedReceiver.balance)}</div>
+                      <div className="font-medium">{selectedReceiver.name}</div>
+                      <div className="text-xs">{selectedReceiver.email}</div>
+                      <div className="text-xs">Phone: {selectedReceiver.phone}</div>
+                      <div className="text-xs">ID: {selectedReceiver._id}</div>
                     </div>
                   </div>
                 )}
@@ -277,7 +276,7 @@ const SendMoney = () => {
               <span>Select Receiver</span>
             </CardTitle>
             <CardDescription>
-              Choose a user from the list to auto-fill the receiver ID
+              Search by email or phone number to find and select a receiver
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -286,48 +285,71 @@ const SendMoney = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Search users..."
+                  placeholder="Search by email or phone number..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
                 />
               </div>
+              {searchTerm.length > 0 && searchTerm.length < 2 && (
+                <div className="mt-1 text-xs text-gray-500">
+                  Type at least 2 characters to search
+                </div>
+              )}
             </div>
 
-            {isWalletsLoading ? (
+            {searchTerm.length < 2 ? (
+              <div className="text-center py-8">
+                <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Search Users</h3>
+                <p className="text-gray-600">
+                  Enter an email address or phone number to search for users
+                </p>
+              </div>
+            ) : isSearchLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin" />
-                <span className="ml-2">Loading users...</span>
+                <span className="ml-2">Searching users...</span>
               </div>
-            ) : filteredWallets.length > 0 ? (
+            ) : filteredUsers.length > 0 ? (
               <div className="space-y-2 max-h-96 overflow-y-auto">
-                {filteredWallets.map((wallet) => (
+                {filteredUsers.map((user) => (
                   <div
-                    key={wallet._id}
+                    key={user._id}
                     className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                      selectedReceiver?._id === wallet._id
+                      selectedReceiver?._id === user._id
                         ? 'border-blue-500 bg-blue-50'
                         : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                     }`}
-                    onClick={() => handleReceiverSelect(wallet)}
+                    onClick={() => handleReceiverSelect(user)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <div className="font-medium text-sm">{wallet.userId.name}</div>
-                        <div className="text-xs text-gray-500">{wallet.userId.email}</div>
-                        <div className="text-xs text-gray-400">ID: {wallet.userId._id}</div>
+                        <div className="font-medium text-sm">{user.name}</div>
+                        <div className="text-xs text-gray-500">{user.email}</div>
+                        <div className="text-xs text-gray-500">{user.phone}</div>
+                        <div className="text-xs text-gray-400">ID: {user._id}</div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm font-semibold text-green-600">
-                          {formatCurrency(wallet.balance)}
+                        <div className="text-xs text-gray-500 capitalize">
+                          {user.role}
                         </div>
                         <div className="text-xs text-gray-500">
-                          {wallet.isBlocked ? (
-                            <span className="text-red-600">Blocked</span>
+                          {user.isEmailVerified ? (
+                            <span className="text-green-600">Verified</span>
                           ) : (
-                            <span className="text-green-600">Active</span>
+                            <span className="text-yellow-600">Unverified</span>
                           )}
                         </div>
+                        {user.role === 'agent' && (
+                          <div className="text-xs text-gray-500">
+                            {user.isApproved ? (
+                              <span className="text-green-600">Approved</span>
+                            ) : (
+                              <span className="text-red-600">Pending</span>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -338,7 +360,7 @@ const SendMoney = () => {
                 <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">No users found</h3>
                 <p className="text-gray-600">
-                  {searchTerm ? 'Try adjusting your search.' : 'No other users are currently available.'}
+                  No users found matching "{searchTerm}". Try searching with a different email or phone number.
                 </p>
               </div>
             )}
@@ -357,15 +379,15 @@ const SendMoney = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div>
-              <h4 className="font-medium mb-2">Method 1: Select Receiver</h4>
+              <h4 className="font-medium mb-2">Method 1: Search & Select</h4>
               <p className="text-gray-600">
-                Click on a user from the right panel to auto-fill their receiver ID and see their current balance.
+                Search for users by email or phone number, then click on a user to auto-fill their receiver ID.
               </p>
             </div>
             <div>
               <h4 className="font-medium mb-2">Method 2: Enter Receiver ID</h4>
               <p className="text-gray-600">
-                Manually enter the receiver ID in the input field. You can copy it from the user list or other sources.
+                Manually enter the receiver ID in the input field if you already know the user's ID.
               </p>
             </div>
             <div>
@@ -402,3 +424,4 @@ const SendMoney = () => {
 };
 
 export default SendMoney;
+

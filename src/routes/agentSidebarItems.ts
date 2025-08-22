@@ -1,8 +1,9 @@
 import Overview from "@/pages/admin/Overview";
 import CashIn from "@/pages/agent/CashIn";
 import CashOut from "@/pages/agent/CashOut";
+import AgentOverview from "@/pages/agent/AgentOverview";
 import MyHistory from "@/pages/MyHistory";
-import MyWallet from "@/pages/MyWallet";
+import UpdateUser from "@/pages/UpdateUser";
 import type { ISidebarItem } from "@/types";
 
 export const agentSidebarItems: ISidebarItem[] = [
@@ -12,7 +13,7 @@ export const agentSidebarItems: ISidebarItem[] = [
       {
         title: "Overview",
         url: "/agent/overview",
-        component: MyWallet,
+        component: AgentOverview,
       },
     ],
   },
@@ -30,14 +31,14 @@ export const agentSidebarItems: ISidebarItem[] = [
         component: CashOut,
       },
       {
-        title: "agent overview",
-        url: "/agent/overview",
-        component: Overview,
-      },
-      {
         title: "My History",
         url: "/agent/my-history",
         component: MyHistory,
+      },
+      {
+        title: "Update User",
+        url: "/agent/update-user",
+        component: UpdateUser,
       },
     ],
   }

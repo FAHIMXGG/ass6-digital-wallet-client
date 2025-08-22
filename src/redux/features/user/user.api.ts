@@ -27,6 +27,11 @@ export interface IUser {
   };
 }
 
+export interface IUpdateUser {
+  name: string;
+  phone: string;
+}
+
 export interface IPagination {
   currentPage: number;
   totalPages: number;
@@ -45,6 +50,11 @@ export interface IGetUsersParams {
   role?: "user" | "agent" | "admin";
   limit?: number;
   page?: number;
+}
+
+export interface ISearchUsersParams {
+  search: string;
+  limit?: number;
 }
 
 export const userApi = baseApi.injectEndpoints({
@@ -80,6 +90,32 @@ export const userApi = baseApi.injectEndpoints({
       }),
       providesTags: (result, error, id) => [{ type: "USER", id }],
     }),
+    searchUsers: builder.query<IResponse<IUser[]>, ISearchUsersParams>({
+      query: (params) => {
+        const searchParams = new URLSearchParams();
+        
+        searchParams.append("search", params.search);
+        
+        if (params.limit) {
+          searchParams.append("limit", params.limit.toString());
+        }
+        
+        const queryString = searchParams.toString();
+        return {
+          url: `/users/search?${queryString}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["USER"],
+    }),
+    updateUser: builder.mutation<IResponse<IUser>, IUpdateUser>({
+      query: (userData) => ({
+        url: "/users/update",
+        method: "PATCH",
+        data: userData,
+      }),
+      invalidatesTags: ["USER"],
+    }),
     approveAgent: builder.mutation<IResponse<IUser>, string>({
       query: (id) => ({
         url: `/users/approve-agent/${id}`,
@@ -100,6 +136,8 @@ export const userApi = baseApi.injectEndpoints({
 export const { 
   useGetUsersQuery, 
   useGetUserByIdQuery, 
+  useSearchUsersQuery,
+  useUpdateUserMutation,
   useApproveAgentMutation, 
   useSuspendAgentMutation 
 } = userApi;
